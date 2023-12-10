@@ -120,7 +120,7 @@ func tokenize(input string) ([]Token, error) {
 }
 
 func main() {
-	fmt.Println("Welcome to Ron Term. Its my little terminal project.")
+	fmt.Println("Welcome to ShellR. Its my little Shell Project.")
 	for {
 		in := bufio.NewReader(os.Stdin)
 		line, err := in.ReadString('\n')
