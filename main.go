@@ -13,12 +13,10 @@ type TokenType int
 
 const (
 	NONE TokenType = iota
-	COMMAND
-	ARGUMENT
-	QUOTED_ARGUMENT
 	PIPE
 	SEMICOLON
 	BACKGROUND
+	STRING
 )
 
 type Token struct {
@@ -53,7 +51,6 @@ func ReadString(input *strings.Reader) (string, error) {
 
 func tokenize(input string) ([]Token, error) {
 	tokens := []Token{}
-	prevToken := Token{T: NONE}
 	r := strings.NewReader(input)
 	currToken := Token{T: NONE}
 	for {
@@ -73,25 +70,21 @@ func tokenize(input string) ([]Token, error) {
 				currToken = Token{}
 			}
 			tokens = append(tokens, SEMICOLON_TOKEN)
-			prevToken = SEMICOLON_TOKEN
 		case '&':
 			if currToken.T != NONE {
 				tokens = append(tokens, currToken)
 				currToken = Token{}
 			}
 			tokens = append(tokens, BACKGROUND_TOKEN)
-			prevToken = BACKGROUND_TOKEN
 		case '|':
 			if currToken.T != NONE {
 				tokens = append(tokens, currToken)
 				currToken = Token{}
 			}
 			tokens = append(tokens, PIPE_TOKEN)
-			prevToken = PIPE_TOKEN
 		case ' ':
 			if currToken.T != NONE {
 				tokens = append(tokens, currToken)
-				prevToken = currToken
 				currToken = Token{}
 			}
 		case 10:
@@ -103,16 +96,12 @@ func tokenize(input string) ([]Token, error) {
 			if data, err := ReadString(r); err != nil {
 				return nil, err
 			} else {
-				currToken.T = QUOTED_ARGUMENT
+				currToken.T = STRING
 				currToken.Data += string('"') + data + string('"')
 			}
 		default:
 			if currToken.T == NONE {
-				if prevToken.T == COMMAND || prevToken.T == ARGUMENT {
-					currToken.T = ARGUMENT
-				} else {
-					currToken.T = COMMAND
-				}
+				currToken.T = STRING
 			}
 			currToken.Data += string(ch)
 		}
