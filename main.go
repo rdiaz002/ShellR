@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"shellr/tokenizer"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 			log.Fatal(err)
 		}
 		fmt.Println(">>> ", line)
-		tokens, err := Tokenize(line)
+		tokens, err := tokenizer.Tokenize(line)
 		if err != nil {
 			fmt.Println(err)
 		}

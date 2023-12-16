@@ -1,4 +1,4 @@
-package main
+package tokenizer
 
 import (
 	"fmt"
@@ -25,6 +25,8 @@ var (
 	PIPE_TOKEN       = Token{T: PIPE, Data: "|"}
 	SEMICOLON_TOKEN  = Token{T: SEMICOLON, Data: ";"}
 	BACKGROUND_TOKEN = Token{T: BACKGROUND, Data: "&"}
+
+	ErrNoEndOfString = fmt.Errorf("end of string not found")
 )
 
 // readString will read the input until a '"' or EOF character is encountered.
@@ -34,7 +36,7 @@ func readString(input *strings.Reader) (string, error) {
 		ch, _, err := input.ReadRune()
 		if err != nil {
 			if err == io.EOF {
-				return "", fmt.Errorf("end of string not found")
+				return "", ErrNoEndOfString
 			}
 			return "", err
 		}
