@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"shellr/parser"
 	"shellr/tokenizer"
 )
 
@@ -21,6 +22,10 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Println("Tokens:")
 		fmt.Println(tokens)
+		cmdTable := parser.Parse(tokens)
+		fmt.Println("cmdTable:")
+		fmt.Println(cmdTable)
 	}
 }
